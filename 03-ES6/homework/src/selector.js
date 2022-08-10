@@ -9,7 +9,14 @@ var traverseDomAndCollectElements = function(matchFunc, startEl) {
   // usa matchFunc para identificar elementos que matchien
 
   // TU CÓDIGO AQUÍ
-  
+  if (matchFunc(startEl)) {
+    resultSet.push(startEl);
+  }
+  for (let i = 0; i < startEl.children.length; i++) {
+    var elements = traverseDomAndCollectElements(matchFunc, startEl.children[i]); 
+    resultSet = [...resultSet, ...elements]; //ES6
+  }
+  return resultSet;
 };
 
 // Detecta y devuelve el tipo de selector
@@ -18,7 +25,11 @@ var traverseDomAndCollectElements = function(matchFunc, startEl) {
 
 var selectorTypeMatcher = function(selector) {
   // tu código aquí
-  
+  //'div' '#id' '.class' 'tag.class'
+  if (selector[0] === "#") return "id";
+  else if (selector[0] === ".") return "class";
+  else if (selector.split('.').length > 1) return 'tag.class';
+  else return "tag"; //se avalua todas las posibilidades con las cuales nos podiamos cruzar
 };
 
 // NOTA SOBRE LA FUNCIÓN MATCH
@@ -30,13 +41,32 @@ var matchFunctionMaker = function(selector) {
   var selectorType = selectorTypeMatcher(selector);
   var matchFunction;
   if (selectorType === "id") { 
-   
+    matchFunction = function (el) {
+      return "#" + el.id === selector;
+      //return `#${el.id}` === selector; OTRA FORMA DA LO MISMO
+    }
   } else if (selectorType === "class") {
-    
+    matchFunction = function (el) {
+      let classes = el.classList; //recorremos
+      
+        for (let i = 0; i < classes.length; i++) {
+         if ("." + classes[i] === selector) return true; 
+        }
+
+        return false;
+    }
   } else if (selectorType === "tag.class") {
-    
+    matchFunction = function (el) {
+      let [tagBuscado, classBuscada] = selector.split(".");
+      return matchFunctionMaker(tagBuscado)(el) && matchFunctionMaker("." + classBuscada)(el);
+      //recursion
+    }
   } else if (selectorType === "tag") {
-    
+    matchFunction = function(el) {
+      // lo devuelve en mayusculas
+      return el.tagName.toLowerCase() === selector;
+      // toLowerCase() pone todo en minusculas
+    }
   }
   return matchFunction;
 };
