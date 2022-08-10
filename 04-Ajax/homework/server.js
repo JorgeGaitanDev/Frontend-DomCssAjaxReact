@@ -60,7 +60,12 @@ app.get("/amigos/:id", function(req, res)  {
   let friendIndex = amigos.findIndex(friend => friend.id == id);
   var friend = amigos[friendIndex]
   console.log(res.status)
-  res.status(200).json(friend);
+  if (friend) {
+  res.status(200).json(friend);  
+}else {
+  res.status(200).json("");  
+}
+  
 });
 
 app.post("/amigos", (req, res) => {
