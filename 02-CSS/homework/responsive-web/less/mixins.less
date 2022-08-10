@@ -1,1 +1,30 @@
 // Mixins acá
+.flex(@direction, @justify, @align) {
+	display: flex;
+	flex-direction: @direction;
+	justify-content: @justify;
+	align-items: @align;
+}
+
+.roundImg(@radius) {
+	border-radius: @radius;
+}
+
+.btn(@color,@background, @border) {
+	font-size: 15px;
+	font-weight: 100;
+
+	background-color: @background;
+	color: @color;
+	border-radius: @border;
+	display: inline-block;
+
+	padding: 10px;
+	cursor: pointer;
+
+	&:hover { //boton cambia de colo al pasar click
+		background-color: @color;
+		color: @background;
+		border: 1px solid @background;
+	}
+}
