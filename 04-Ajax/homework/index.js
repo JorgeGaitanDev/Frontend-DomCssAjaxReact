@@ -10,9 +10,10 @@ let showFriends = function() {
 			// let li = document.createElement("li");
 			// li.id = f.id;
 			// li.innerText = f.name;	
-			$("#lista").append(`<li id="${f.id}"> ${f.name} X </li>`)
+			$("#lista").append(`<li id="${f.id}"> ${f.name} <button onClick=deleteFriend(${f.id})>X</button> </li>`);
 		})
 	});
+	$("img").hide(); //borra la imagen a lo que inicia la lista de amigos
 };
 
     $("#boton").click(showFriends);
@@ -40,26 +41,37 @@ $("#search").click(function(){
 			$("#amigo").text(`No existe amigo con id número: ${id}`);
 		}
 		$("input").val("");
-	})});
+	})
+});
 
-	$("#delete").click(function(){
-		let id = $("#inputDelete").val();
-		if (id) {
-			let friend;
-			$.get(`${URL}/${id}`, function(data){
-				friend = data;
-			});
+let deleteFriend = function (idCruz){
+	let id;
+	if (typeof idCruz === "number") {
+		id = idCruz;
+	}else {
+		id = $("inputDelete").val();
+	}
+	let friend;
 
-			$.ajax(
-				{url: `${URL}/${id}`, 
-				type: "DELETE", 
-				success: function() {
-					$("#success").text(`Tu Amigo ${friend.name} fue borrado con exito`);
-					$("#inputDelete").val("");
-					showFriends();
-				}
-			});
-		}else {
-			$("#success").text(`Ingresa un ID valido`);	//min37	
-		}
+	if (id) {
+	    $.get(`${URL}/${id}`, function(data){
+			friend = data;
+		});
+	
+		$.ajax(
+			{url: `${URL}/${id}`, 
+			type: "DELETE", 
+			success: function() {
+				$("#success").text(`Tu Amigo ${friend.name} fue borrado con exito`);
+				$("#inputDelete").val("");
+				showFriends();
+			}
+			});	
+	}else{
+		$("#success").text(`Ingresa un ID valido`);	//min37	
+	}
+};
+
+	$("#delete").click(function(deleteFriend){	
+		
 	});
